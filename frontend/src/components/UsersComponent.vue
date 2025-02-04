@@ -12,14 +12,19 @@ const columns = ref([
   { key: 'name', label: 'Name' },
   { key: 'email', label: 'Eame' },
   { key: 'created_at', label: 'Created At' },
+  { key: 'street', label: 'Street' },
+  { key: 'city', label: 'city' },
+  { key: 'state', label: 'state' },
+  { key: 'zip_code', label: 'zipcode' },
 ])
 
 const getUsers = () => {
   get_users()
     .then((response) => {
-      users.value = response.data.map((user) => ({
+      users.value = response.data.map(({ addresses, ...user }) => ({
         ...user,
         created_at: formatDate(user.created_at),
+        ...(addresses[0] || {}),
       }))
     })
     .catch((error) => console.log(error))
