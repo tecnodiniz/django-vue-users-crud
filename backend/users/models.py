@@ -1,9 +1,13 @@
 from django.db import models
-
+from django.utils.timezone import now
 
 
 class CustomUser(models.Model):
     name = models.CharField(max_length=255, null=False, blank=False)
+    email = models.EmailField(max_length=50, blank=True, default="")
+    phone = models.CharField(max_length=50, blank=True, default="")
+    created_at = models.DateTimeField(default=now)
+
    
 
     def __str__(self):
