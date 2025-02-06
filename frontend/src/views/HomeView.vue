@@ -1,16 +1,32 @@
 <script setup>
-import UsersComponent from '@/components/UsersComponent.vue'
-import { get_users } from '@/services/api'
-import { onMounted, ref } from 'vue'
+import { ref } from 'vue'
+import { useUsers } from '@/composables/useUsers'
+import TableComponent from '@/components/TableComponent.vue'
+import UserFormComponent from '@/components/UserFormComponent.vue'
 
-const users = ref([])
+const { users } = useUsers()
+const user = ref()
+const dialog = ref(false)
+const columns = ref([
+  { key: 'name', label: 'Name' },
+  { key: 'email', label: 'Email' },
+  { key: 'phone', label: 'Phone' },
+  { key: 'created_at', label: 'Created At' },
+  { key: 'street', label: 'Street' },
+  { key: 'city', label: 'city' },
+  { key: 'state', label: 'state' },
+  { key: 'zip_code', label: 'zipcode' },
+])
 
-const getUsers = () => {
-  get_users().then((response) => (users.value = response.data))
+const showForm = (selectedUser) => {
+  user.value = selectedUser
+  dialog.value = true
 }
-onMounted(() => getUsers())
 </script>
 
 <template>
-  <main><UsersComponent :users="users" /></main>
+  <!-- :edit="true" :remove="true" to add actions -->
+  <TableComponent :items="users" :columns="columns" :edit="true" @edit="showForm" />
+
+  <UserFormComponent v-if="user && dialog" :user="user" @close="dialog = false" :dialog="dialog" />
 </template>
